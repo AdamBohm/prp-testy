@@ -1,69 +1,48 @@
 #include <iostream>
-#include "cas.h"
-
-using std::cout;
-using std::cin;
-using std::endl;
+#include "zlomky.h"
 
 int main() {
-    cout << "--- cas oprava ---" << endl << endl;
+    // 1. Vytvoření objektů podle ukázky [cite: 416]
+    zlomky z1;                      // Konstruktor bez parametrů (1/1)
+    zlomky z2(3, 2);                // Konstruktor s parametry (3/2)
+    zlomky z3(2, 6);                // Zlomek, který půjde zkrátit (2/6)
+    zlomky z4(0, 2);                // Zlomek s nulou v čitateli [cite: 416]
 
-    // 1. Objekt vytvořený výchozím konstruktorem (systémový čas)
-    cas c1;
-    cout << "Objekt vytvoreny vychozim konstruktorem c1" << endl;
-    cout << "pocet sekund od pulnoci " << c1.sekundyOdPulnoci() << endl;
-    c1.vypisCas();
-    cout << endl;
+    // 2. Výpis základních informací [cite: 416]
+    std::cout << "Objekt 'z1' vytvoreny konstruktorem bez parametru: " << z1.toString() << ", " << z1.naDesetinneCislo() << std::endl;
+    std::cout << "Objekt 'z2' vytvoreny konstruktorem s parametry: " << z2.toString() << ", " << z2.naDesetinneCislo() << std::endl;
 
-    // 2. Objekt vytvořený konstruktorem s parametry (00:00:01)
-    cas c2(0, 0, 1);
-    cout << "Objekt vytvoreny konstruktorem s parametry c2" << endl;
-    cout << "pocet sekund od pulnoci " << c2.sekundyOdPulnoci() << endl;
-    c2.vypisCas();
-    cout << endl;
+    // Ukázka krácení u z3
+    std::cout << "Objekt 'z3' pred kracenim: " << z3.toString() << ", " << z3.naDesetinneCislo() << std::endl;
+    z3.zkrat();
+    std::cout << "Objekt 'z3' po kraceni: " << z3.toString() << std::endl;
 
-    // 3. Objekt vytvořený konstruktorem s parametry (23:59:59)
-    cas c3(23, 59, 59);
-    cout << "Objekt vytvoreny konstruktorem s parametry c3" << endl;
-    cout << "pocet sekund od pulnoci " << c3.sekundyOdPulnoci() << endl;
-    c3.vypisCas();
-    cout << endl;
+    std::cout << "Objekt 'z4' vytvoreny konstruktorem s parametry: " << z4.toString() << ", " << z4.naDesetinneCislo() << std::endl;
+    std::cout << "------------------------------------------" << std::endl;
 
-    // 4. Objekt vytvořený kopírovacím konstruktorem
-    cas c4(c1);
-    cout << "Objekt vytvoreny kopirovacim konstruktorem c4(c1)" << endl;
-    cout << "pocet sekund od pulnoci " << c4.sekundyOdPulnoci() << endl;
-    c4.vypisCas();
-    cout << endl;
-
-    // 5. Nastavení času u objektu c1
-    int h, m, s;
-    cout << "Nastaveni casu u objektu c1" << endl;
-    cout << "Zadej hodiny: "; cin >> h;
-    cout << "Zadej minuty: "; cin >> m;
-    cout << "Zadej sekundy: "; cin >> s;
-
-    if (c1.nastavCas(h, m, s)) {
-        cout << "pocet sekund od pulnoci " << c1.sekundyOdPulnoci() << endl;
-        cout << "Cas po zmene ";
-        c1.vypisCas();
-    } else {
-        cout << "Zadan neplatny cas!" << endl;
+    // 3. Test převrácení
+    std::cout << "Objekt 'z2' pred prevracenim: " << z2.toString() << std::endl;
+    if (z2.prevrat()) {
+        std::cout << "Objekt 'z2' po prevraceni: " << z2.toString() << std::endl;
     }
-    cout << endl;
 
-    // 6. Převedení sekund na čas u objektu c2
-    int sek;
-    cout << "Prevedeni sekund na cas u objektu c2" << endl;
-    cout << "Zadej pocet sekund: "; cin >> sek;
+    if (!z4.prevrat()) {
+        std::cout << "Zlomek 'z4' (" << z4.toString() << ") nelze prevratit." << std::endl;
+    }
+    std::cout << "------------------------------------------" << std::endl;
 
-    int dny = c2.nastavZeSekund(sek);
-    cout << "Sekundy " << sek << " dny " << dny << " a cas ";
-    c2.vypisCas();
-    cout << endl;
+    // 4. Změna zlomku uživatelem (Settery) [cite: 418, 419, 420]
+    int n_cit, n_jmen;
+    std::cout << "Zmena zlomku 'z1':" << std::endl;
+    std::cout << "Zadej citatele: ";
+    std::cin >> n_cit;
+    std::cout << "Zadej jmenovatele: ";
+    std::cin >> n_jmen;
 
-    cout << "Pro pokracovani stiskni klavesu 'k'...";
-    char k; cin >> k;
+    z1.set_c(n_cit); // Použití setteru pro čitatele
+    z1.set_j(n_jmen); // Použití setteru pro jmenovatele (včetně tvé kontroly nuly)
+
+    std::cout << "Objekt 'z1' po zmene: " << z1.toString() << std::endl;
 
     return 0;
 }
